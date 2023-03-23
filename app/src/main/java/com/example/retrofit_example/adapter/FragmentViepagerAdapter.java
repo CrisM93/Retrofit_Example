@@ -8,6 +8,7 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import com.example.retrofit_example.fragments.AnimeFragment;
+import com.example.retrofit_example.fragments.CartoonFragment;
 import com.example.retrofit_example.fragments.MangaFragment;
 
 import java.util.ArrayList;
@@ -32,6 +33,10 @@ public class FragmentViepagerAdapter extends FragmentStateAdapter {
             }
             case 1: {
                 frag = MangaFragment.getInstance();
+                break;
+            }
+            case 2: {
+                frag = CartoonFragment.getInstance();
                 break;
             }
         }
