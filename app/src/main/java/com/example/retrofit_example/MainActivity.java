@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
+import androidx.viewpager2.widget.MarginPageTransformer;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.os.Bundle;
@@ -17,6 +18,8 @@ import com.example.retrofit_example.fragments.MangaFragment;
 import com.example.retrofit_example.response.ArticleData;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
+import com.tbuonomo.viewpagerdotsindicator.DotsIndicator;
+import com.tbuonomo.viewpagerdotsindicator.WormDotsIndicator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +27,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements TabLayoutMediator.TabConfigurationStrategy, RequestHandler.RequestListener {
     private AnimeFragment animeFragment = AnimeFragment.getInstance();
     private MangaFragment mangaFragment = MangaFragment.getInstance();
-    private CartoonFragment cartoonFragment= CartoonFragment.getInstance();
+    private CartoonFragment cartoonFragment = CartoonFragment.getInstance();
     private List<Fragment> fragmentList = new ArrayList<>();
     private RequestHandler requestHandler;
 
@@ -33,40 +36,36 @@ public class MainActivity extends AppCompatActivity implements TabLayoutMediator
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ViewPager2 articlesViewPager = findViewById(R.id.articles_viewpager);
-        TabLayout tabs = findViewById(R.id.tab_layout);
+        ViewPager2 viewPager2 = findViewById(R.id.articles_viewpager);
+        //TabLayout tabs = findViewById(R.id.tab_layout);
 
         fragmentList.add(animeFragment);
         fragmentList.add(mangaFragment);
         fragmentList.add(cartoonFragment);
 
-        FragmentViepagerAdapter fragmentViepagerAdapter = new FragmentViepagerAdapter(fragmentList, this);
+        //DotsIndicator dotsIndicator =  findViewById(R.id.dots_indicator);
+        WormDotsIndicator dotsIndicator = findViewById(R.id.worm_dots_indicator);
 
-        articlesViewPager.setAdapter(fragmentViepagerAdapter);
 
-       // articlesViewPager.setPageTransformer(new ZoomOutPageTransformer());
-        //articlesViewPager.addItemDecoration(new SpacesItemDecoration(42));
-        articlesViewPager.setOffscreenPageLimit(3);
+        FragmentViepagerAdapter viewPagerAdapter = new FragmentViepagerAdapter(fragmentList, this);
 
-        //float pageMargin= getResources().getDimensionPixelOffset(R.dimen.pageMargin);
-        //float pageOffset = getResources().getDimensionPixelOffset(R.dimen.offset);
+        viewPager2.setAdapter(viewPagerAdapter);
+        dotsIndicator.attachTo(viewPager2);
+        //viewPager2.setPageTransformer(new ZoomOutPageTransformer());
+        //viewPager2.addItemDecoration(new SpacesItemDecoration(-50));
+        viewPager2.setOffscreenPageLimit(3);
 
-       articlesViewPager.setPageTransformer(((page, position) -> {
-            float myOffset = position * -(2 * 120 + 55);
-            if (position < -1) {
-                page.setTranslationX(-myOffset);
-            } else if (position <= 1) {
-                float scaleFactor = Math.max(0.7f, 1f - Math.abs(position - 0.14285715f));
-                page.setTranslationX(myOffset);
-                page.setScaleY(scaleFactor);
-                page.setAlpha(scaleFactor);
-            } else {
-                page.setAlpha(0f);
-                page.setTranslationX(myOffset);
-            }
-        }));
+        viewPager2.setPageTransformer((page, position) -> {
+            float pageTranslationX = 280;
+            page.setTranslationX(-pageTranslationX * position);
+            // Next line scales the item's height. You can remove it if you don't want this effect
+            page.setScaleY(1f - (0.30f * Math.abs(position)));
+            // page.setScaleX(1f);
+            // If you want a fading effect uncomment the next line:
+            page.setAlpha(0.25f + (1 - Math.abs(position)));
+        });
 
-        new TabLayoutMediator(tabs, articlesViewPager, this).attach();
+        //new TabLayoutMediator(tabs, viewPager2, this).attach();
 
         requestHandler = new RequestHandler(this, this);
         requestHandler.getArticles(StringUtlis.ARTICLES.ANIME);
@@ -83,7 +82,7 @@ public class MainActivity extends AppCompatActivity implements TabLayoutMediator
                 tab.setText("ANIME");
                 break;
             }
-            case 2:{
+            case 2: {
                 tab.setText("CARTOON");
                 break;
             }
