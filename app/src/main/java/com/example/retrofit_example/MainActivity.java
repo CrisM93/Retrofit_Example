@@ -9,6 +9,7 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.util.LogPrinter;
 import android.view.View;
 
 import com.example.retrofit_example.adapter.FragmentViepagerAdapter;
@@ -22,7 +23,10 @@ import com.tbuonomo.viewpagerdotsindicator.DotsIndicator;
 import com.tbuonomo.viewpagerdotsindicator.WormDotsIndicator;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 public class MainActivity extends AppCompatActivity implements TabLayoutMediator.TabConfigurationStrategy, RequestHandler.RequestListener {
     private AnimeFragment animeFragment = AnimeFragment.getInstance();
@@ -69,6 +73,7 @@ public class MainActivity extends AppCompatActivity implements TabLayoutMediator
 
         requestHandler = new RequestHandler(this, this);
         requestHandler.getArticles(StringUtlis.ARTICLES.ANIME);
+
     }
 
     @Override
