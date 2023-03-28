@@ -41,39 +41,31 @@ public class MainActivity extends AppCompatActivity implements TabLayoutMediator
         setContentView(R.layout.activity_main);
 
         ViewPager2 viewPager2 = findViewById(R.id.articles_viewpager);
-        //TabLayout tabs = findViewById(R.id.tab_layout);
+        TabLayout tabs = findViewById(R.id.tab_layout);
 
         fragmentList.add(animeFragment);
         fragmentList.add(mangaFragment);
         fragmentList.add(cartoonFragment);
 
-        //DotsIndicator dotsIndicator =  findViewById(R.id.dots_indicator);
         WormDotsIndicator dotsIndicator = findViewById(R.id.worm_dots_indicator);
-
-
         FragmentViepagerAdapter viewPagerAdapter = new FragmentViepagerAdapter(fragmentList, this);
 
         viewPager2.setAdapter(viewPagerAdapter);
         dotsIndicator.attachTo(viewPager2);
-        //viewPager2.setPageTransformer(new ZoomOutPageTransformer());
-        //viewPager2.addItemDecoration(new SpacesItemDecoration(-50));
-        viewPager2.setOffscreenPageLimit(3);
+        viewPager2.setPageTransformer(new ZoomOutPageTransformer());
+        viewPager2.setOffscreenPageLimit(2);
 
-        viewPager2.setPageTransformer((page, position) -> {
+        /*viewPager2.setPageTransformer((page, position) -> {
             float pageTranslationX = 280;
             page.setTranslationX(-pageTranslationX * position);
             // Next line scales the item's height. You can remove it if you don't want this effect
             page.setScaleY(1f - (0.30f * Math.abs(position)));
-            // page.setScaleX(1f);
             // If you want a fading effect uncomment the next line:
             page.setAlpha(0.25f + (1 - Math.abs(position)));
-        });
-
-        //new TabLayoutMediator(tabs, viewPager2, this).attach();
-
+        });*/
+        new TabLayoutMediator(tabs, viewPager2, this).attach();
         requestHandler = new RequestHandler(this, this);
         requestHandler.getArticles(StringUtlis.ARTICLES.ANIME);
-
     }
 
     @Override
